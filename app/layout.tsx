@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="flex h-full overflow-hidden bg-[var(--bg)] text-[var(--fg)]">
+      <body className="flex h-full overflow-hidden bg-stone-50 text-stone-900 dark:bg-zinc-950 dark:text-stone-100">
         <ThemeProvider>
           {/* Sidebar */}
           <aside className="flex w-60 shrink-0 flex-col border-r border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-900">
@@ -61,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </aside>
 
           {/* Main content */}
-          <main className="flex-1 overflow-y-auto bg-[var(--bg)]">
+          <main className="flex-1 overflow-y-auto bg-stone-50 dark:bg-zinc-950">
             <div className="mx-auto max-w-3xl px-8 py-10">{children}</div>
           </main>
         </ThemeProvider>

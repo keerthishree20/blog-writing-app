@@ -3,23 +3,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root {
-  --bg: #f8f7f4;
-  --fg: #1a1a1a;
-}
-
-.dark {
-  --bg: #18181b;
-  --fg: #f4f4f5;
-}
-
 html, body {
   height: 100%;
 }
 
 body {
-  background: var(--bg);
-  color: var(--fg);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
