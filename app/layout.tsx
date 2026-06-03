@@ -21,7 +21,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="flex h-full overflow-hidden bg-stone-50 text-stone-900 dark:bg-zinc-950 dark:text-stone-100">
+      <body className="flex h-full overflow-hidden bg-stone-50 text-stone-900 dark:bg-zinc-950 dark:text-stone-100" suppressHydrationWarning>
         <ThemeProvider>
           {/* Sidebar */}
           <aside className="flex w-60 shrink-0 flex-col border-r border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-900">
