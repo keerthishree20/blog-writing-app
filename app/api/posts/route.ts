@@ -20,7 +20,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Title is required" }, { status: 400 });
   }
   const post = await prisma.post.create({
-    data: { title: title.trim(), content: content ?? "", tags: tags ?? "" },
+    data: {
+      title: title.trim(),
+      content: content ?? "",
+      tags: tags ?? "",
+      authorId: session.user.email ?? null,
+      authorName: session.user.name ?? session.user.email ?? "Anonymous",
+    },
   });
   return NextResponse.json(post, { status: 201 });
 }

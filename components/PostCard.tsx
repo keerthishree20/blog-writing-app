@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Pencil, Trash2, Clock } from "lucide-react";
+import { Pencil, Trash2, Clock, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface PostCardProps {
@@ -10,6 +10,7 @@ interface PostCardProps {
   tags: string;
   content: string;
   updatedAt: string;
+  authorName?: string | null;
   isOwner?: boolean;
 }
 
@@ -17,7 +18,7 @@ function stripHtml(html: string) {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-export default function PostCard({ id, title, tags, content, updatedAt, isOwner }: PostCardProps) {
+export default function PostCard({ id, title, tags, content, updatedAt, authorName, isOwner }: PostCardProps) {
   const router = useRouter();
   const tagList = tags ? tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
   const excerpt = stripHtml(content).slice(0, 120);
@@ -42,6 +43,12 @@ export default function PostCard({ id, title, tags, content, updatedAt, isOwner 
         </div>
         {excerpt && (
           <p className="mt-1.5 text-sm leading-relaxed text-stone-500 line-clamp-2 dark:text-stone-400">{excerpt}</p>
+        )}
+        {authorName && (
+          <div className="mt-2 flex items-center gap-1 text-xs text-stone-400">
+            <User size={11} />
+            <span>{authorName}</span>
+          </div>
         )}
         {tagList.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">

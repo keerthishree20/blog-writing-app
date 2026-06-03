@@ -20,7 +20,7 @@ export default async function HomePage({
 
   const posts = await prisma.post.findMany({
     orderBy: { updatedAt: "desc" },
-    select: { id: true, title: true, tags: true, content: true, updatedAt: true },
+    select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true },
   });
 
   const filtered = query
@@ -76,7 +76,7 @@ export default async function HomePage({
       ) : (
         <div className="flex flex-col gap-3">
           {filtered.map((post) => (
-            <PostCard key={post.id} id={post.id} title={post.title} tags={post.tags} content={post.content} updatedAt={post.updatedAt.toISOString()} isOwner={isOwner} />
+            <PostCard key={post.id} id={post.id} title={post.title} tags={post.tags} content={post.content} updatedAt={post.updatedAt.toISOString()} authorName={post.authorName} isOwner={isOwner} />
           ))}
         </div>
       )}

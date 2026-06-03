@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Pencil, ArrowLeft, Calendar } from "lucide-react";
+import { Pencil, ArrowLeft, Calendar, User } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 
@@ -33,6 +33,12 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
                 <Calendar size={12} />
                 {new Date(post.updatedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
               </span>
+              {post.authorName && (
+                <span className="flex items-center gap-1.5 text-xs text-stone-400">
+                  <User size={12} />
+                  {post.authorName}
+                </span>
+              )}
               {tagList.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {tagList.map((tag) => (
