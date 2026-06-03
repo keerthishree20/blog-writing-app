@@ -2,11 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Pencil, ArrowLeft, Calendar } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { auth } from "@/auth";
 
 export default async function ViewPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const post = await prisma.post.findUnique({ where: { id } });
+  const [post, session] = await Promise.all([
+    prisma.post.findUnique({ where: { id } }),
+    auth(),
+  ]);
   if (!post) notFound();
+  const isOwner = !!session?.user;
 
   const tagList = post.tags ? post.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
 
@@ -39,13 +44,15 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
               )}
             </div>
           </div>
-          <Link
-            href={`/posts/${id}/edit`}
-            className="flex shrink-0 items-center gap-1.5 rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-2 text-sm font-medium text-stone-600 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400 dark:hover:border-violet-700 dark:hover:bg-violet-950 dark:hover:text-violet-300"
-          >
-            <Pencil size={13} />
-            Edit
-          </Link>
+          {isOwner && (
+            <Link
+              href={`/posts/${id}/edit`}
+              className="flex shrink-0 items-center gap-1.5 rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-2 text-sm font-medium text-stone-600 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400 dark:hover:border-violet-700 dark:hover:bg-violet-950 dark:hover:text-violet-300"
+            >
+              <Pencil size={13} />
+              Edit
+            </Link>
+          )}
         </div>
       </div>
 

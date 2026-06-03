@@ -10,13 +10,14 @@ interface PostCardProps {
   tags: string;
   content: string;
   updatedAt: string;
+  isOwner?: boolean;
 }
 
 function stripHtml(html: string) {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-export default function PostCard({ id, title, tags, content, updatedAt }: PostCardProps) {
+export default function PostCard({ id, title, tags, content, updatedAt, isOwner }: PostCardProps) {
   const router = useRouter();
   const tagList = tags ? tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
   const excerpt = stripHtml(content).slice(0, 120);
@@ -52,21 +53,24 @@ export default function PostCard({ id, title, tags, content, updatedAt }: PostCa
           </div>
         )}
       </Link>
-      <div className="absolute right-4 top-4 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-        <Link
-          href={`/posts/${id}/edit`}
-          onClick={(e) => e.stopPropagation()}
-          className="flex h-7 w-7 items-center justify-center rounded-lg border border-stone-200 bg-white text-stone-400 transition hover:border-violet-200 hover:text-violet-600 dark:border-stone-700 dark:bg-stone-800 dark:hover:border-violet-700 dark:hover:text-violet-400"
-        >
-          <Pencil size={13} />
-        </Link>
-        <button
-          onClick={handleDelete}
-          className="flex h-7 w-7 items-center justify-center rounded-lg border border-stone-200 bg-white text-stone-400 transition hover:border-red-200 hover:text-red-500 dark:border-stone-700 dark:bg-stone-800 dark:hover:border-red-800 dark:hover:text-red-400"
-        >
-          <Trash2 size={13} />
-        </button>
-      </div>
+
+      {isOwner && (
+        <div className="absolute right-4 top-4 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+          <Link
+            href={`/posts/${id}/edit`}
+            onClick={(e) => e.stopPropagation()}
+            className="flex h-7 w-7 items-center justify-center rounded-lg border border-stone-200 bg-white text-stone-400 transition hover:border-violet-200 hover:text-violet-600 dark:border-stone-700 dark:bg-stone-800 dark:hover:border-violet-700 dark:hover:text-violet-400"
+          >
+            <Pencil size={13} />
+          </Link>
+          <button
+            onClick={handleDelete}
+            className="flex h-7 w-7 items-center justify-center rounded-lg border border-stone-200 bg-white text-stone-400 transition hover:border-red-200 hover:text-red-500 dark:border-stone-700 dark:bg-stone-800 dark:hover:border-red-800 dark:hover:text-red-400"
+          >
+            <Trash2 size={13} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

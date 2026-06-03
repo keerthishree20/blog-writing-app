@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import Link from "next/link";
-import { PenLine, BookOpen, Feather } from "lucide-react";
+import { PenLine, BookOpen, Feather, LogIn } from "lucide-react";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
+import UserMenu from "@/components/UserMenu";
+import { auth } from "@/auth";
 import "./globals.css";
 
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -13,7 +15,10 @@ export const metadata: Metadata = {
   description: "A minimal blog writing app",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  const user = session?.user;
+
   return (
     <html lang="en" className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="flex h-full overflow-hidden bg-stone-50 text-stone-900 dark:bg-zinc-950 dark:text-stone-100">
@@ -33,15 +38,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* Nav */}
             <nav className="flex flex-col gap-1 p-3 pt-4">
               <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-stone-400">
-                Write
+                Browse
               </p>
-              <Link
-                href="/posts/new"
-                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-stone-600 transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-stone-400 dark:hover:bg-violet-950 dark:hover:text-violet-300"
-              >
-                <PenLine size={15} />
-                New Post
-              </Link>
               <Link
                 href="/"
                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-stone-600 transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-stone-400 dark:hover:bg-violet-950 dark:hover:text-violet-300"
@@ -49,10 +47,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <BookOpen size={15} />
                 All Posts
               </Link>
+
+              {user && (
+                <>
+                  <p className="mb-1 mt-3 px-3 text-[10px] font-semibold uppercase tracking-widest text-stone-400">
+                    Write
+                  </p>
+                  <Link
+                    href="/posts/new"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-stone-600 transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-stone-400 dark:hover:bg-violet-950 dark:hover:text-violet-300"
+                  >
+                    <PenLine size={15} />
+                    New Post
+                  </Link>
+                </>
+              )}
             </nav>
 
-            {/* Footer with theme toggle */}
-            <div className="mt-auto border-t border-stone-100 px-4 py-4 dark:border-stone-800">
+            {/* Footer */}
+            <div className="mt-auto space-y-3 border-t border-stone-100 px-4 py-4 dark:border-stone-800">
+              {user ? (
+                <UserMenu name={user.name} email={user.email} image={user.image} />
+              ) : (
+                <Link
+                  href="/login"
+                  className="flex items-center gap-2 rounded-xl border border-stone-200 px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-violet-50 hover:text-violet-700 dark:border-stone-700 dark:text-stone-400 dark:hover:bg-violet-950 dark:hover:text-violet-300"
+                >
+                  <LogIn size={14} />
+                  Sign in to write
+                </Link>
+              )}
               <div className="flex items-center justify-between">
                 <p className="text-xs text-stone-400">Theme</p>
                 <ThemeToggle />
