@@ -14,14 +14,18 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
+  const post = await prisma.post.findUnique({ where: { id } });
+  if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (post.authorId !== session.user.id) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { title, content, tags } = await req.json();
   if (!title?.trim()) return NextResponse.json({ error: "Title is required" }, { status: 400 });
 
-  const post = await prisma.post.update({
+  const updated = await prisma.post.update({
     where: { id },
     data: { title: title.trim(), content: content ?? "", tags: tags ?? "" },
   });
-  return NextResponse.json(post);
+  return NextResponse.json(updated);
 }
 
 export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -29,6 +33,10 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
+  const post = await prisma.post.findUnique({ where: { id } });
+  if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (post.authorId !== session.user.id) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   await prisma.post.delete({ where: { id } });
   return NextResponse.json({ success: true });
 }
