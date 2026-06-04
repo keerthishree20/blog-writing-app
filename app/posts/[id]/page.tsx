@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Pencil, ArrowLeft, Calendar, User } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
+import ReadingProgressBar from "@/components/ReadingProgressBar";
 
 export default async function ViewPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -18,6 +19,7 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
 
   return (
     <div>
+      <ReadingProgressBar />
       <Link href="/" className="mb-6 inline-flex items-center gap-1.5 text-sm text-stone-400 transition-colors hover:text-stone-700 dark:hover:text-stone-200">
         <ArrowLeft size={14} />
         All Posts
