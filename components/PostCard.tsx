@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Pencil, Trash2, Clock, User } from "lucide-react";
+import { Pencil, Trash2, Clock, User, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface PostCardProps {
@@ -11,6 +11,7 @@ interface PostCardProps {
   content: string;
   updatedAt: string;
   authorName?: string | null;
+  likes?: number;
   isOwner?: boolean;
 }
 
@@ -18,7 +19,7 @@ function stripHtml(html: string) {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-export default function PostCard({ id, title, tags, content, updatedAt, authorName, isOwner }: PostCardProps) {
+export default function PostCard({ id, title, tags, content, updatedAt, authorName, likes = 0, isOwner }: PostCardProps) {
   const router = useRouter();
   const tagList = tags ? tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
   const excerpt = stripHtml(content).slice(0, 120);
@@ -37,10 +38,18 @@ export default function PostCard({ id, title, tags, content, updatedAt, authorNa
           <h2 className="text-base font-semibold text-stone-900 transition-colors group-hover:text-violet-700 dark:text-stone-100 dark:group-hover:text-violet-400">
             {title}
           </h2>
-          <span className="flex shrink-0 items-center gap-1 text-xs text-stone-400">
-            <Clock size={11} />
-            {new Date(updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-          </span>
+          <div className="flex shrink-0 items-center gap-2">
+            {likes > 0 && (
+              <span className="flex items-center gap-1 text-xs text-red-400">
+                <Heart size={11} fill="currentColor" />
+                {likes}
+              </span>
+            )}
+            <span className="flex items-center gap-1 text-xs text-stone-400">
+              <Clock size={11} />
+              {new Date(updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            </span>
+          </div>
         </div>
         {excerpt && (
           <p className="mt-1.5 text-sm leading-relaxed text-stone-500 line-clamp-2 dark:text-stone-400">{excerpt}</p>

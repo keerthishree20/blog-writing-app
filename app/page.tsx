@@ -22,7 +22,7 @@ export default async function HomePage({
 
   const posts = await prisma.post.findMany({
     orderBy: { updatedAt: "desc" },
-    select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true },
+    select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true, likes: true },
   });
 
   // Collect all unique tags across all posts
@@ -89,7 +89,7 @@ export default async function HomePage({
       ) : (
         <div className="flex flex-col gap-3">
           {filtered.map((post) => (
-            <PostCard key={post.id} id={post.id} title={post.title} tags={post.tags} content={post.content} updatedAt={post.updatedAt.toISOString()} authorName={post.authorName} isOwner={isAdmin || post.authorId === session?.user?.id} />
+            <PostCard key={post.id} id={post.id} title={post.title} tags={post.tags} content={post.content} updatedAt={post.updatedAt.toISOString()} authorName={post.authorName} likes={post.likes} isOwner={isAdmin || post.authorId === session?.user?.id} />
           ))}
         </div>
       )}

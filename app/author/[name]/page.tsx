@@ -16,7 +16,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ name: s
   const posts = await prisma.post.findMany({
     where: { authorName },
     orderBy: { updatedAt: "desc" },
-    select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true },
+    select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true, likes: true },
   });
 
   if (posts.length === 0) notFound();
@@ -55,6 +55,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ name: s
             content={post.content}
             updatedAt={post.updatedAt.toISOString()}
             authorName={post.authorName}
+            likes={post.likes}
             isOwner={isAdmin || post.authorId === session?.user?.id}
           />
         ))}
