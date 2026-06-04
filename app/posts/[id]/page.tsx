@@ -4,6 +4,7 @@ import { Pencil, ArrowLeft, Calendar, User } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
+import LikeButton from "@/components/LikeButton";
 
 export default async function ViewPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -70,6 +71,11 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
           className="prose prose-stone max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-a:text-violet-600 prose-code:rounded prose-code:bg-stone-100 prose-code:text-violet-700 prose-blockquote:border-violet-300 dark:prose-code:bg-stone-800 dark:prose-code:text-violet-400"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+      </div>
+
+      {/* Like button */}
+      <div className="mt-6 flex justify-center">
+        <LikeButton postId={post.id} initialLikes={post.likes} />
       </div>
     </div>
   );
