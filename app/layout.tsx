@@ -5,6 +5,7 @@ import { PenLine, BookOpen, Feather, LogIn } from "lucide-react";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserMenu from "@/components/UserMenu";
+import MobileNav from "@/components/MobileNav";
 import { auth } from "@/auth";
 import "./globals.css";
 
@@ -23,8 +24,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="flex h-full overflow-hidden bg-stone-50 text-stone-900 dark:bg-zinc-950 dark:text-stone-100" suppressHydrationWarning>
         <ThemeProvider>
-          {/* Sidebar */}
-          <aside className="flex w-60 shrink-0 flex-col border-r border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-900">
+          {/* Sidebar — hidden on mobile */}
+          <aside className="hidden w-60 shrink-0 flex-col border-r border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-900 md:flex">
             {/* Logo */}
             <div className="flex items-center gap-2.5 border-b border-stone-100 px-5 py-5 dark:border-stone-800">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600">
@@ -84,10 +85,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </div>
           </aside>
 
-          {/* Main content */}
-          <main className="flex-1 overflow-y-auto bg-stone-50 dark:bg-zinc-950">
-            <div className="mx-auto max-w-3xl px-8 py-10">{children}</div>
-          </main>
+          {/* Right side: mobile header + main content */}
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <MobileNav user={user} />
+            <main className="flex-1 overflow-y-auto bg-stone-50 dark:bg-zinc-950">
+              <div className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-10">{children}</div>
+            </main>
+          </div>
         </ThemeProvider>
       </body>
     </html>
