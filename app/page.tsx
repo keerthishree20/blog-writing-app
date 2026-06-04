@@ -3,6 +3,7 @@ import { PenLine } from "lucide-react";
 import { Suspense } from "react";
 import PostCard from "@/components/PostCard";
 import SearchBar from "@/components/SearchBar";
+import TagFilter from "@/components/TagFilter";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 
@@ -11,10 +12,11 @@ export const dynamic = "force-dynamic";
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; tag?: string }>;
 }) {
-  const { q } = await searchParams;
+  const { q, tag } = await searchParams;
   const query = q?.trim().toLowerCase() ?? "";
+  const activeTag = tag?.trim().toLowerCase() ?? "";
   const session = await auth();
   const isAdmin = session?.user?.email === "keerthishreets@gmail.com";
 
@@ -23,13 +25,16 @@ export default async function HomePage({
     select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true },
   });
 
-  const filtered = query
-    ? posts.filter(
-        (p) =>
-          p.title.toLowerCase().includes(query) ||
-          p.tags.toLowerCase().includes(query)
-      )
-    : posts;
+  // Collect all unique tags across all posts
+  const allTags = Array.from(
+    new Set(posts.flatMap((p) => p.tags.split(",").map((t) => t.trim()).filter(Boolean)))
+  );
+
+  const filtered = posts.filter((p) => {
+    const matchesQuery = !query || p.title.toLowerCase().includes(query) || p.tags.toLowerCase().includes(query);
+    const matchesTag = !activeTag || p.tags.split(",").map((t) => t.trim().toLowerCase()).includes(activeTag);
+    return matchesQuery && matchesTag;
+  });
 
   return (
     <div>
@@ -51,11 +56,19 @@ export default async function HomePage({
         </Link>
       </div>
 
-      <div className="mb-5">
+      <div className="mb-4">
         <Suspense>
           <SearchBar defaultValue={q ?? ""} />
         </Suspense>
       </div>
+
+      {allTags.length > 0 && (
+        <div className="mb-5">
+          <Suspense>
+            <TagFilter tags={allTags} activeTag={activeTag} />
+          </Suspense>
+        </div>
+      )}
 
       {posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-200 bg-white py-24 text-center dark:border-stone-700 dark:bg-stone-900">
