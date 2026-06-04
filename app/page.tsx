@@ -16,11 +16,11 @@ export default async function HomePage({
   const { q } = await searchParams;
   const query = q?.trim().toLowerCase() ?? "";
   const session = await auth();
-  const isOwner = !!session?.user;
+  const isAdmin = session?.user?.email === "keerthishreets@gmail.com";
 
   const posts = await prisma.post.findMany({
     orderBy: { updatedAt: "desc" },
-    select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true },
+    select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true },
   });
 
   const filtered = query
@@ -76,7 +76,7 @@ export default async function HomePage({
       ) : (
         <div className="flex flex-col gap-3">
           {filtered.map((post) => (
-            <PostCard key={post.id} id={post.id} title={post.title} tags={post.tags} content={post.content} updatedAt={post.updatedAt.toISOString()} authorName={post.authorName} isOwner={isOwner} />
+            <PostCard key={post.id} id={post.id} title={post.title} tags={post.tags} content={post.content} updatedAt={post.updatedAt.toISOString()} authorName={post.authorName} isOwner={isAdmin || post.authorId === session?.user?.id} />
           ))}
         </div>
       )}

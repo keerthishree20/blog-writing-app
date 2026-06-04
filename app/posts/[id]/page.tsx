@@ -11,7 +11,8 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
     auth(),
   ]);
   if (!post) notFound();
-  const isOwner = !!session?.user;
+  const isAdmin = session?.user?.email === "keerthishreets@gmail.com";
+  const isOwner = isAdmin || post.authorId === session?.user?.id;
 
   const tagList = post.tags ? post.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
 
