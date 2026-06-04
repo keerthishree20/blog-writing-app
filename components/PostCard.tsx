@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Pencil, Trash2, Clock, User, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { readingTime } from "@/lib/readingTime";
 
 interface PostCardProps {
   id: string;
@@ -23,6 +24,7 @@ export default function PostCard({ id, title, tags, content, updatedAt, authorNa
   const router = useRouter();
   const tagList = tags ? tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
   const excerpt = stripHtml(content).slice(0, 120);
+  const time = readingTime(content);
 
   async function handleDelete() {
     if (!confirm("Delete this post?")) return;
@@ -47,6 +49,10 @@ export default function PostCard({ id, title, tags, content, updatedAt, authorNa
             )}
             <span className="flex items-center gap-1 text-xs text-stone-400">
               <Clock size={11} />
+              {time}
+            </span>
+            <span className="text-xs text-stone-300 dark:text-stone-600">·</span>
+            <span className="text-xs text-stone-400">
               {new Date(updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
             </span>
           </div>

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Pencil, ArrowLeft, Calendar, User } from "lucide-react";
+import { Pencil, ArrowLeft, Calendar, User, Clock } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
 import LikeButton from "@/components/LikeButton";
+import { readingTime } from "@/lib/readingTime";
 
 export default async function ViewPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -17,6 +18,7 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
   const isOwner = isAdmin || post.authorId === session?.user?.id;
 
   const tagList = post.tags ? post.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
+  const time = readingTime(post.content);
 
   return (
     <div>
@@ -33,6 +35,10 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
               {post.title}
             </h1>
             <div className="mt-3 flex flex-wrap items-center gap-3">
+              <span className="flex items-center gap-1.5 text-xs text-stone-400">
+                <Clock size={12} />
+                {time}
+              </span>
               <span className="flex items-center gap-1.5 text-xs text-stone-400">
                 <Calendar size={12} />
                 {new Date(post.updatedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
