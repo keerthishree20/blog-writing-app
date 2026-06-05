@@ -8,17 +8,18 @@ export default function ContentArea({ children }: { children: React.ReactNode })
   const [scrolling, setScrolling] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const lastScrollTop = useRef(0);
+  const hasShown = useRef(false);
 
   const handleScroll = useCallback(() => {
     const el = mainRef.current;
-    if (!el) return;
+    if (!el || hasShown.current) return;
     const currentTop = el.scrollTop;
     const scrollingDown = currentTop > lastScrollTop.current;
     lastScrollTop.current = currentTop;
 
     if (scrollingDown) {
+      hasShown.current = true;
       setScrolling(true);
-      clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => setScrolling(false), 3000);
     }
   }, []);
