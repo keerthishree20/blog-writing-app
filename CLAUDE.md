@@ -43,6 +43,7 @@ vercel --prod --yes --scope keerthishree-s-projects   # Deploy to production
 - **PostCard / view page** show edit/delete only when `isOwner=true`
 - **Dark mode:** `next-themes` with `attribute="class"` — `@custom-variant dark (&:where(.dark, .dark *))` in `globals.css` overrides Tailwind's built-in media-query dark variant. Both `<html>` and `<body>` need `suppressHydrationWarning`.
 - **Editor:** TipTap loaded via `next/dynamic` with `ssr: false`. Auto-saves to `localStorage` every 1.5s.
+- **Scroll inspiration banner:** `ContentArea` (client component) wraps `<main>` and listens for scroll events. On the first downward scroll per page visit it shows `ScrollInspirationBanner` — a violet strip with a random writing quote that fades out after 3 seconds. Uses `hasShown` ref to ensure it only fires once.
 
 ### Data models
 ```
