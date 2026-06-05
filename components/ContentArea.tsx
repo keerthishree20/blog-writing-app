@@ -19,7 +19,7 @@ export default function ContentArea({ children }: { children: React.ReactNode })
     if (scrollingDown) {
       setScrolling(true);
       clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setScrolling(false), 1000);
+      timerRef.current = setTimeout(() => setScrolling(false), 3000);
     }
   }, []);
 
