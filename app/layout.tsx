@@ -6,6 +6,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserMenu from "@/components/UserMenu";
 import MobileNav from "@/components/MobileNav";
+import ContentArea from "@/components/ContentArea";
 import { auth } from "@/auth";
 import "./globals.css";
 
@@ -88,9 +89,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {/* Right side: mobile header + main content */}
           <div className="flex flex-1 flex-col overflow-hidden">
             <MobileNav user={user} />
-            <main className="flex-1 overflow-y-auto bg-stone-50 dark:bg-zinc-950">
-              <div className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-10">{children}</div>
-            </main>
+            <ContentArea>{children}</ContentArea>
           </div>
         </ThemeProvider>
       </body>
