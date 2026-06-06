@@ -5,13 +5,17 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
 import LikeButton from "@/components/LikeButton";
+import ShareButton from "@/components/ShareButton";
+import PostCard from "@/components/PostCard";
 import { readingTime } from "@/lib/readingTime";
+import { headers } from "next/headers";
 
 export default async function ViewPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [post, session] = await Promise.all([
+  const [post, session, headersList] = await Promise.all([
     prisma.post.findUnique({ where: { id } }),
     auth(),
+    headers(),
   ]);
   if (!post) notFound();
   const isAdmin = session?.user?.email === "keerthishreets@gmail.com";
@@ -19,6 +23,26 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
 
   const tagList = post.tags ? post.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
   const time = readingTime(post.content);
+
+  // Related posts: same tags, exclude current post, limit 3
+  let relatedPosts: { id: string; title: string; tags: string; content: string; updatedAt: Date; authorName: string | null; authorId: string | null; likes: number }[] = [];
+  if (tagList.length > 0) {
+    const all = await prisma.post.findMany({
+      where: { id: { not: id } },
+      select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true, likes: true },
+      orderBy: { updatedAt: "desc" },
+    });
+    relatedPosts = all
+      .filter((p) => {
+        const pts = p.tags ? p.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
+        return pts.some((t) => tagList.includes(t));
+      })
+      .slice(0, 3);
+  }
+
+  const host = headersList.get("host") ?? "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const postUrl = `${protocol}://${host}/posts/${id}`;
 
   return (
     <div>
@@ -79,10 +103,35 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
         />
       </div>
 
-      {/* Like button */}
-      <div className="mt-6 flex justify-center">
+      {/* Like + Share */}
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
         <LikeButton postId={post.id} initialLikes={post.likes} />
+        <ShareButton title={post.title} url={postUrl} />
       </div>
+
+      {/* Related posts */}
+      {relatedPosts.length > 0 && (
+        <div className="mt-10">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-stone-400">
+            Related Posts
+          </h2>
+          <div className="flex flex-col gap-3">
+            {relatedPosts.map((p) => (
+              <PostCard
+                key={p.id}
+                id={p.id}
+                title={p.title}
+                tags={p.tags}
+                content={p.content}
+                updatedAt={p.updatedAt.toISOString()}
+                authorName={p.authorName}
+                likes={p.likes}
+                isOwner={isAdmin || p.authorId === session?.user?.id}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
