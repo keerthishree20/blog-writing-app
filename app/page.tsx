@@ -25,10 +25,7 @@ export default async function HomePage({
     select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true, likes: true },
   });
 
-  // Collect all unique tags across all posts
-  const allTags = Array.from(
-    new Set(posts.flatMap((p) => p.tags.split(",").map((t) => t.trim()).filter(Boolean)))
-  );
+  const allTags = ["fullstack", "next.js", "typescript"];
 
   const filtered = posts.filter((p) => {
     const matchesQuery = !query || p.title.toLowerCase().includes(query) || p.tags.toLowerCase().includes(query);
@@ -62,13 +59,11 @@ export default async function HomePage({
         </Suspense>
       </div>
 
-      {allTags.length > 0 && (
-        <div className="mb-5">
-          <Suspense>
-            <TagFilter tags={allTags} activeTag={activeTag} />
-          </Suspense>
-        </div>
-      )}
+      <div className="mb-5">
+        <Suspense>
+          <TagFilter tags={allTags} activeTag={activeTag} />
+        </Suspense>
+      </div>
 
       {posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-200 bg-white py-24 text-center dark:border-stone-700 dark:bg-stone-900">

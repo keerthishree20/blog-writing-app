@@ -76,7 +76,7 @@ export default function PostCard({ id, title, tags, content, updatedAt, authorNa
       {/* Tag links */}
       {tagList.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
-          {tagList.map((tag) => (
+          {tagList.slice(0, 3).map((tag) => (
             <Link
               key={tag}
               href={`/?tag=${encodeURIComponent(tag)}`}
@@ -85,6 +85,11 @@ export default function PostCard({ id, title, tags, content, updatedAt, authorNa
               #{tag}
             </Link>
           ))}
+          {tagList.length > 3 && (
+            <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-medium text-stone-400 dark:bg-stone-800 dark:text-stone-500">
+              +{tagList.length - 3} more
+            </span>
+          )}
         </div>
       )}
 
