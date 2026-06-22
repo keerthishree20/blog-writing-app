@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import Link from "next/link";
-import { PenLine, BookOpen, Feather, LogIn } from "lucide-react";
+import { PenLine, BookOpen, Feather, LogIn, Bookmark, UserCircle } from "lucide-react";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserMenu from "@/components/UserMenu";
@@ -49,6 +49,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <BookOpen size={15} />
                 All Posts
               </Link>
+              <Link
+                href="/bookmarks"
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-stone-600 transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-stone-400 dark:hover:bg-violet-950 dark:hover:text-violet-300"
+              >
+                <Bookmark size={15} />
+                Bookmarks
+              </Link>
 
               {user && (
                 <>
@@ -61,6 +68,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   >
                     <PenLine size={15} />
                     New Post
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-stone-600 transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-stone-400 dark:hover:bg-violet-950 dark:hover:text-violet-300"
+                  >
+                    <UserCircle size={15} />
+                    Profile
                   </Link>
                 </>
               )}

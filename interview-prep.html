@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blog Project — Interview Preparation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1a1a1a; background: #fff; padding: 40px; max-width: 860px; margin: auto; line-height: 1.7; }
+  h1 { font-size: 26px; color: #4f46e5; border-bottom: 3px solid #4f46e5; padding-bottom: 10px; margin-bottom: 6px; }
+  h2 { font-size: 18px; color: #4f46e5; margin: 36px 0 14px; border-left: 4px solid #4f46e5; padding-left: 12px; }
+  h3 { font-size: 14px; font-weight: 700; color: #1e1b4b; margin: 20px 0 4px; }
+  .subtitle { color: #6b7280; font-size: 13px; margin-bottom: 30px; }
+  .qa { background: #f8f7ff; border: 1px solid #e0e7ff; border-radius: 8px; padding: 14px 18px; margin-bottom: 14px; }
+  .question { color: #3730a3; font-weight: 700; margin-bottom: 6px; }
+  .question::before { content: "Q: "; color: #6366f1; }
+  .answer { color: #374151; }
+  .answer::before { content: "A: "; font-weight: 700; color: #059669; }
+  code { background: #ede9fe; color: #5b21b6; padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 12px; }
+  .tag { display: inline-block; background: #ede9fe; color: #5b21b6; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin: 2px; }
+  .project-summary { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; border-radius: 12px; padding: 28px; margin-top: 40px; }
+  .project-summary h2 { color: white; border-left-color: white; }
+  .project-summary p { color: #e0e7ff; margin-bottom: 10px; }
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .feature-card { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 12px; }
+  .feature-card h4 { color: #fff; font-size: 13px; margin-bottom: 4px; }
+  .feature-card p { color: #c7d2fe; font-size: 12px; margin: 0; }
+  .stack-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .divider { border: none; border-top: 1px solid #e5e7eb; margin: 10px 0; }
+  .tip { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 10px 14px; border-radius: 4px; font-size: 13px; color: #92400e; margin-bottom: 14px; }
+  @media print {
+    body { padding: 20px; font-size: 12px; }
+    .qa { break-inside: avoid; }
+    .project-summary { break-inside: avoid; }
+    h2 { break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Blog Writing App — Interview Preparation</h1>
+<p class="subtitle">Complete Q&amp;A guide + Project Summary &nbsp;|&nbsp; Prepared for: Keerthishree &nbsp;|&nbsp; Stack: Next.js · TypeScript · Prisma · Auth.js · Tailwind · Vercel</p>
+
+<!-- ─── SECTION 1 ─── -->
+<h2>1. Project Introduction Questions</h2>
+
+<div class="qa">
+  <p class="question">Tell me about your blog project.</p>
+  <p class="answer">I built a full-stack blog writing application from scratch using Next.js 16 with the App Router, TypeScript, Tailwind CSS, Prisma ORM with PostgreSQL (Neon), and Auth.js v5 for authentication. It supports Google OAuth and email/password login, rich-text editing with TipTap, tag filtering, author profiles, reading time estimates, like buttons, share functionality, related posts, a reading progress bar, and is fully responsive for mobile and desktop. It's deployed on Vercel.</p>
+</div>
+
+<div class="qa">
+  <p class="question">Why did you choose this tech stack?</p>
+  <p class="answer">Next.js gives me both frontend and backend in one framework — server components reduce client-side JavaScript, and API routes handle the backend. TypeScript adds type safety which catches bugs early. Prisma gives a type-safe ORM so database queries are predictable. Tailwind speeds up UI development. Neon PostgreSQL is serverless and works perfectly with Vercel's serverless architecture.</p>
+</div>
+
+<div class="qa">
+  <p class="question">What was the most challenging part of this project?</p>
+  <p class="answer">Setting up Auth.js v5 with the Next.js 16 App Router was the hardest part. The newer versions have breaking API changes — for example, the middleware in Next.js 16 requires a proxy pattern instead of the traditional middleware file. Also migrating from SQLite to PostgreSQL on Vercel required fixing the Prisma migration lock file provider from "sqlite" to "postgresql" and consolidating all migrations into PostgreSQL-compatible SQL.</p>
+</div>
+
+<!-- ─── SECTION 2 ─── -->
+<h2>2. Next.js &amp; React Questions</h2>
+
+<div class="qa">
+  <p class="question">What is the difference between Server Components and Client Components?</p>
+  <p class="answer">Server Components render on the server — they can directly access databases, secrets, and file systems, and they send zero JavaScript to the browser. Client Components use <code>"use client"</code> at the top and run in the browser — they can use hooks like <code>useState</code>, <code>useEffect</code>, and browser APIs. In my project, post pages are server components that fetch data from PostgreSQL directly, while the like button, mobile nav, and reading progress bar are client components because they need interactivity.</p>
+</div>
+
+<div class="qa">
+  <p class="question">What is the App Router and how is it different from the Pages Router?</p>
+  <p class="answer">The App Router uses the <code>app/</code> directory and enables React Server Components by default. It supports nested layouts via <code>layout.tsx</code> files, server-side data fetching inside components, and streaming with Suspense. The old Pages Router in the <code>pages/</code> directory used <code>getServerSideProps</code> / <code>getStaticProps</code> for data fetching, which is more verbose and doesn't support React Server Components.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How does dynamic routing work in your app?</p>
+  <p class="answer">Dynamic routes use folder names with square brackets. For example, <code>app/posts/[id]/page.tsx</code> handles any URL like <code>/posts/abc123</code>. In Next.js 16, the params are a Promise, so I must <code>await params</code> before using them: <code>const { id } = await params</code>. I also have <code>app/author/[name]/page.tsx</code> for author profile pages.</p>
+</div>
+
+<div class="qa">
+  <p class="question">What is the purpose of <code>layout.tsx</code>?</p>
+  <p class="answer">The <code>layout.tsx</code> wraps all pages at a given route level and persists across navigation — it doesn't re-render when the page changes. I use the root layout to render the sidebar, mobile nav, theme provider, and font. This means the sidebar is always visible without re-mounting on every page transition.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How did you implement dark mode?</p>
+  <p class="answer">I used the <code>next-themes</code> library with <code>attribute="class"</code>, which adds a <code>dark</code> class to the <code>&lt;html&gt;</code> tag. In Tailwind CSS v4, the built-in dark variant uses a media query by default, so I overrode it with <code>@custom-variant dark (&:where(.dark, .dark *))</code> in <code>globals.css</code> to make it class-based. Both <code>&lt;html&gt;</code> and <code>&lt;body&gt;</code> tags need <code>suppressHydrationWarning</code> to prevent hydration mismatch warnings.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How did you make the app responsive for mobile?</p>
+  <p class="answer">I used Tailwind's responsive prefixes. The desktop sidebar has <code>hidden md:flex</code> — hidden on mobile, shown as flex on medium screens and above. For mobile I built a <code>MobileNav</code> client component with a hamburger button that opens a slide-in drawer. It's shown with <code>md:hidden</code>. Main content padding adjusts with <code>px-4 md:px-8</code>.</p>
+</div>
+
+<!-- ─── SECTION 3 ─── -->
+<h2>3. Database &amp; Prisma Questions</h2>
+
+<div class="qa">
+  <p class="question">What is Prisma and why use it over raw SQL?</p>
+  <p class="answer">Prisma is a type-safe ORM (Object Relational Mapper). Instead of writing SQL strings, I write JavaScript/TypeScript like <code>prisma.post.findMany()</code>. The main benefit is type safety — the TypeScript types for my queries are auto-generated from the schema, so if I try to access a field that doesn't exist, I get a compile-time error. It also handles connection pooling, migrations, and works great with serverless environments via the <code>@prisma/adapter-pg</code>.</p>
+</div>
+
+<div class="qa">
+  <p class="question">What does your database schema look like?</p>
+  <p class="answer">I have two models. <code>Post</code> has fields: id (cuid), title, content, tags (comma-separated string), authorId, authorName, likes (integer), createdAt, and updatedAt. <code>User</code> has: id, name, email, password (bcrypt hashed), and createdAt. I kept tags as a comma-separated string to keep the schema simple — a many-to-many tags table would be cleaner at scale but unnecessary for this project.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How do database migrations work in Prisma?</p>
+  <p class="answer">When I change the schema, I run <code>npx prisma migrate dev --name description</code> which creates a new SQL migration file in <code>prisma/migrations/</code> and applies it. On Vercel deployment, the build script runs <code>prisma migrate deploy</code> which applies any pending migrations to the production database. There's also a <code>migration_lock.toml</code> file that locks the provider — it must say <code>postgresql</code> to match the schema.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How did you add the likes feature to the database?</p>
+  <p class="answer">I added a <code>likes Int @default(0)</code> field to the Post model, then created a new migration file with <code>ALTER TABLE "Post" ADD COLUMN "likes" INTEGER NOT NULL DEFAULT 0</code>. I also created an API route at <code>/api/posts/[id]/like</code> that uses Prisma's atomic increment: <code>prisma.post.update({ data: { likes: { increment: 1 } } })</code> — this is safe under concurrent requests because it's a single atomic DB operation.</p>
+</div>
+
+<!-- ─── SECTION 4 ─── -->
+<h2>4. Authentication Questions</h2>
+
+<div class="qa">
+  <p class="question">How did you implement authentication?</p>
+  <p class="answer">I used Auth.js v5 with two providers: Credentials (email + password) and Google OAuth. For credentials login, when a user registers I hash their password with bcrypt (cost factor 12) and store it. On login, I compare the input password against the hash with <code>bcrypt.compare()</code>. For Google OAuth, I set up a Web Application type OAuth client in Google Cloud Console with the correct redirect URIs. Sessions use the JWT strategy — no session table needed in the database.</p>
+</div>
+
+<div class="qa">
+  <p class="question">What is the difference between <code>auth.ts</code> and <code>auth.config.ts</code>?</p>
+  <p class="answer"><code>auth.ts</code> is the full server-side config — it imports Prisma and bcrypt, handles the credentials provider logic, and is used everywhere except middleware. <code>auth.config.ts</code> is an Edge-safe config that has no Node.js-specific imports (no Prisma, no bcrypt) and is only used by the proxy/middleware because Next.js middleware runs on the Edge runtime which doesn't support all Node.js modules.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How did you protect routes like /posts/new?</p>
+  <p class="answer">In Next.js 16, instead of <code>middleware.ts</code>, I use a <code>proxy.ts</code> file that checks if the user is authenticated before allowing access to protected routes. If not authenticated, it redirects to the login page. Inside server components I call <code>auth()</code> directly to get the session, and in API routes I check the session and return 401 if the user isn't logged in.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How did you implement admin-only permissions?</p>
+  <p class="answer">I hardcoded the admin email <code>keerthishreets@gmail.com</code> as a constant. In the delete and edit API routes, I check: if the session user's email matches the admin email, allow the action regardless of who owns the post. Otherwise, only the original author can edit/delete their own post. This check exists in both the API route and the UI — the edit/delete buttons are only shown when <code>isOwner = isAdmin || post.authorId === session.user.id</code>.</p>
+</div>
+
+<div class="qa">
+  <p class="question">Why use JWT strategy instead of database sessions?</p>
+  <p class="answer">JWT sessions are stateless — the session data is stored in an encrypted cookie on the client, so there's no need for a sessions table in the database. This is better for serverless deployments like Vercel where each request might hit a different server instance. The tradeoff is that you can't instantly invalidate a session (you'd have to wait for the token to expire), but for a blog app that's acceptable.</p>
+</div>
+
+<!-- ─── SECTION 5 ─── -->
+<h2>5. API &amp; Backend Questions</h2>
+
+<div class="qa">
+  <p class="question">How did you structure your API routes?</p>
+  <p class="answer">I followed REST conventions under <code>app/api/posts/</code>. The <code>route.ts</code> file handles <code>GET</code> (all posts) and <code>POST</code> (create). The <code>[id]/route.ts</code> handles <code>GET</code> (one post), <code>PUT</code> (update), and <code>DELETE</code>. There's also <code>[id]/like/route.ts</code> for the like increment. Each mutating route checks authentication first and returns a 401 if the user isn't logged in, and 403 if they're not authorized.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How does the like button work technically?</p>
+  <p class="answer">The <code>LikeButton</code> is a client component. When clicked, it calls <code>POST /api/posts/[id]/like</code> which atomically increments the likes count in PostgreSQL. To prevent double-liking, the browser stores liked post IDs in <code>localStorage</code> under <code>liked_posts</code>. On mount, it checks this list and disables the button if the post was already liked. This is per-browser, not per-user, so it's a soft prevention rather than a hard database constraint.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How did you implement reading time?</p>
+  <p class="answer">I created a <code>lib/readingTime.ts</code> utility. It strips all HTML tags from the content using a regex, splits the remaining text into words, and divides by 200 (average reading speed in words per minute). The result is rounded and has a minimum of 1 minute. It's used in both PostCard (list view) and the post detail page header.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How does the related posts feature work?</p>
+  <p class="answer">On the post detail page, after fetching the current post, I extract its tags into an array. Then I fetch all other posts from the database and filter them in JavaScript to find ones that share at least one tag with the current post. I limit the result to 3, sorted by most recent. This runs on the server so there's no extra client-side fetch. If the post has no tags or no matching posts exist, the section is hidden.</p>
+</div>
+
+<!-- ─── SECTION 6 ─── -->
+<h2>6. Frontend Features Questions</h2>
+
+<div class="qa">
+  <p class="question">How does the reading progress bar work?</p>
+  <p class="answer">The <code>ReadingProgressBar</code> is a client component fixed at the top of the page. It listens to the <code>scroll</code> event with <code>{ passive: true }</code> for performance. The progress percentage is calculated as <code>(window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100</code>. The bar is a div with <code>width: ${progress}%</code> and a violet background. The event listener is cleaned up in the <code>useEffect</code> return function.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How does the share button work?</p>
+  <p class="answer">The <code>ShareButton</code> client component has three options. "Copy link" uses the Clipboard API: <code>navigator.clipboard.writeText(url)</code> and shows a "Copied!" confirmation for 2 seconds. "Post on X" opens Twitter's intent URL with the post title and URL pre-filled. On mobile, a native share button uses the Web Share API: <code>navigator.share({ title, url })</code> which opens the OS share sheet. The post URL is constructed server-side using the <code>host</code> header.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How does tag filtering work?</p>
+  <p class="answer">The <code>TagFilter</code> is a client component that uses <code>useSearchParams</code> and <code>useRouter</code>. When a tag is clicked, it calls <code>router.replace('/?tag=tagname')</code>. The home page is a server component that reads the <code>tag</code> search param and filters the posts array before rendering. Clicking an active tag again clears the filter. This approach keeps filtering logic on the server and makes the URL shareable.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How does the TipTap rich text editor work?</p>
+  <p class="answer">TipTap is a headless rich-text editor built on ProseMirror. I load it with <code>next/dynamic</code> and <code>ssr: false</code> because it uses browser-only APIs. It saves the HTML content to <code>localStorage</code> every 1.5 seconds as an auto-save. The content is stored as HTML in the database. On the post view page, it's rendered with <code>dangerouslySetInnerHTML</code> and styled using Tailwind's <code>prose</code> typography plugin.</p>
+</div>
+
+<!-- ─── SECTION 7 ─── -->
+<h2>7. Deployment &amp; DevOps Questions</h2>
+
+<div class="qa">
+  <p class="question">How did you deploy the application?</p>
+  <p class="answer">I deployed to Vercel using the Vercel CLI with <code>vercel --prod --yes --scope keerthishree-s-projects</code>. The build command is <code>prisma migrate deploy && next build</code> — it applies any pending DB migrations first, then builds Next.js. The <code>postinstall</code> script runs <code>prisma generate</code> to regenerate the Prisma client from the schema. All environment variables (DATABASE_URL, AUTH_SECRET, Google OAuth credentials) are stored in Vercel's environment variable settings.</p>
+</div>
+
+<div class="qa">
+  <p class="question">What is Neon PostgreSQL and why use it?</p>
+  <p class="answer">Neon is a serverless PostgreSQL provider. It's perfect for Vercel deployments because it scales to zero when not in use (no idle costs), supports connection pooling for serverless functions, and has a generous free tier. The connection string is stored as <code>DATABASE_URL</code> in environment variables. I use <code>@prisma/adapter-pg</code> which connects via the <code>pg</code> driver optimized for serverless.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How do you handle environment variables?</p>
+  <p class="answer">Sensitive values like database URLs, API keys, and auth secrets never go in the code. They're stored in a <code>.env</code> file locally (gitignored) and in Vercel's dashboard for production. In Next.js, variables prefixed with <code>NEXT_PUBLIC_</code> are exposed to the browser; everything else stays server-side only. The <code>AUTH_SECRET</code> is used by Auth.js to encrypt JWT tokens.</p>
+</div>
+
+<!-- ─── SECTION 8 ─── -->
+<h2>8. General &amp; Conceptual Questions</h2>
+
+<div class="qa">
+  <p class="question">What is MCP and how are you using it?</p>
+  <p class="answer">MCP stands for Model Context Protocol — an open standard by Anthropic that lets AI assistants connect to external tools and data sources. I've connected Google Custom Search MCP to Claude Code so that when I'm developing, the AI can search the web in real time for up-to-date documentation and answers instead of relying only on its training data.</p>
+</div>
+
+<div class="qa">
+  <p class="question">How would you scale this app if it had millions of users?</p>
+  <p class="answer">Several things: add full-text search with PostgreSQL's tsvector instead of filtering in JavaScript; add a Redis cache layer for frequently-read posts; store images in S3/Cloudinary instead of the DB; add pagination for the posts list; move the like button to a proper per-user system with a separate Likes table; add a CDN for static assets; and consider using ISR (Incremental Static Regeneration) in Next.js to cache post pages at the CDN level.</p>
+</div>
+
+<div class="qa">
+  <p class="question">What security measures did you implement?</p>
+  <p class="answer">Passwords are hashed with bcrypt at cost factor 12 — never stored in plain text. API routes check authentication before any mutation. Admin actions verify the user's email server-side. Prisma uses parameterized queries automatically so SQL injection is not possible. Environment variables keep secrets out of the codebase. The Auth.js <code>AUTH_SECRET</code> encrypts all JWT tokens. Route protection via the proxy prevents unauthenticated access to the editor.</p>
+</div>
+
+<div class="qa">
+  <p class="question">What would you improve or add next?</p>
+  <p class="answer">I would add: a comment system so readers can engage with posts; draft/publish toggle so authors can save without making posts public; a cover image upload feature using Cloudinary; full-text search with PostgreSQL; email notifications when someone likes your post; and an RSS feed at <code>/feed.xml</code> for readers to subscribe via RSS readers.</p>
+</div>
+
+<!-- ─── PROJECT SUMMARY ─── -->
+<div class="project-summary">
+  <h2>Project Summary — What We Built</h2>
+  <p>A production-deployed, full-stack blog writing application with authentication, rich-text editing, and advanced reader features. Built entirely from scratch and live at <strong>blog-writing-app-ashy.vercel.app</strong>.</p>
+
+  <div class="stack-row">
+    <span class="tag" style="background:rgba(255,255,255,0.2);color:#fff;">Next.js 16</span>
+    <span class="tag" style="background:rgba(255,255,255,0.2);color:#fff;">TypeScript</span>
+    <span class="tag" style="background:rgba(255,255,255,0.2);color:#fff;">Tailwind CSS v4</span>
+    <span class="tag" style="background:rgba(255,255,255,0.2);color:#fff;">Prisma v7</span>
+    <span class="tag" style="background:rgba(255,255,255,0.2);color:#fff;">PostgreSQL (Neon)</span>
+    <span class="tag" style="background:rgba(255,255,255,0.2);color:#fff;">Auth.js v5</span>
+    <span class="tag" style="background:rgba(255,255,255,0.2);color:#fff;">TipTap Editor</span>
+    <span class="tag" style="background:rgba(255,255,255,0.2);color:#fff;">Vercel</span>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Authentication</h4>
+      <p>Email/password with bcrypt hashing + Google OAuth. JWT sessions. Route protection via proxy.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Rich Text Editor</h4>
+      <p>TipTap editor loaded dynamically. Auto-saves to localStorage every 1.5s. Renders HTML with Tailwind prose.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Responsive Design</h4>
+      <p>Desktop sidebar + mobile hamburger nav with slide-in drawer. Works on all screen sizes.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Dark Mode</h4>
+      <p>Class-based dark mode via next-themes. Custom Tailwind v4 variant overrides media query default.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Tag Filter System</h4>
+      <p>URL-param based filtering (?tag=). Server-side filtering. Shareable filtered URLs.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Author Profiles</h4>
+      <p>Dynamic /author/[name] pages. Shows author's post count and all their posts.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Reading Progress Bar</h4>
+      <p>Fixed violet bar at top. Scroll-event driven. Passive listener for performance.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Like Button</h4>
+      <p>Atomic DB increment. localStorage deduplication. Like count shown on cards.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Reading Time</h4>
+      <p>Strips HTML, counts words, divides by 200 wpm. Shown on cards and post header.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Share Button</h4>
+      <p>Copy link + Post on X + native Web Share API on mobile. Clipboard API feedback.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Related Posts</h4>
+      <p>Tag-based matching. Server-side. Shows up to 3 posts with overlapping tags.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Scroll Inspiration Banner</h4>
+      <p>Random writing quote shown once per page visit on first downward scroll. 3s fade out.</p>
+    </div>
+  </div>
+
+  <hr style="border-color:rgba(255,255,255,0.2);margin:20px 0"/>
+  <p><strong>Database:</strong> 2 models — Post (id, title, content, tags, authorId, authorName, likes, timestamps) and User (id, name, email, password, createdAt). PostgreSQL on Neon with Prisma migrations.</p>
+  <p><strong>Deployment:</strong> Vercel (Hobby plan). Build runs prisma migrate deploy + next build. Environment variables managed in Vercel dashboard. Auto-deploys on git push.</p>
+  <p><strong>AI Tooling:</strong> Built using Claude Code with Google Custom Search MCP connected for real-time web search during development.</p>
+</div>
+
+<br/>
+<p style="text-align:center;color:#9ca3af;font-size:12px;">To save as PDF: Press Ctrl+P (or Cmd+P on Mac) → Change destination to "Save as PDF" → Save</p>
+
+</body>
+</html>

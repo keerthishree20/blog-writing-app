@@ -4,25 +4,29 @@ import { Suspense } from "react";
 import PostCard from "@/components/PostCard";
 import SearchBar from "@/components/SearchBar";
 import TagFilter from "@/components/TagFilter";
+import Pagination from "@/components/Pagination";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
+
+const POSTS_PER_PAGE = 6;
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; tag?: string }>;
+  searchParams: Promise<{ q?: string; tag?: string; page?: string }>;
 }) {
-  const { q, tag } = await searchParams;
+  const { q, tag, page } = await searchParams;
   const query = q?.trim().toLowerCase() ?? "";
   const activeTag = tag?.trim().toLowerCase() ?? "";
+  const currentPage = Math.max(1, parseInt(page ?? "1") || 1);
   const session = await auth();
   const isAdmin = session?.user?.email === "keerthishreets@gmail.com";
 
   const posts = await prisma.post.findMany({
     orderBy: { updatedAt: "desc" },
-    select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true, likes: true },
+    select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true, likes: true, views: true },
   });
 
   const allTags = ["fullstack", "next.js", "typescript"];
@@ -32,6 +36,10 @@ export default async function HomePage({
     const matchesTag = !activeTag || p.tags.split(",").map((t) => t.trim().toLowerCase()).includes(activeTag);
     return matchesQuery && matchesTag;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / POSTS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginated = filtered.slice((safePage - 1) * POSTS_PER_PAGE, safePage * POSTS_PER_PAGE);
 
   return (
     <div>
@@ -82,11 +90,16 @@ export default async function HomePage({
           <p className="mt-1 text-sm text-stone-400">Try a different title or tag.</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {filtered.map((post) => (
-            <PostCard key={post.id} id={post.id} title={post.title} tags={post.tags} content={post.content} updatedAt={post.updatedAt.toISOString()} authorName={post.authorName} likes={post.likes} isOwner={isAdmin || post.authorId === session?.user?.id} />
-          ))}
-        </div>
+        <>
+          <div className="flex flex-col gap-3">
+            {paginated.map((post) => (
+              <PostCard key={post.id} id={post.id} title={post.title} tags={post.tags} content={post.content} updatedAt={post.updatedAt.toISOString()} authorName={post.authorName} likes={post.likes} views={post.views} searchQuery={query} isOwner={isAdmin || post.authorId === session?.user?.id} />
+            ))}
+          </div>
+          <Suspense>
+            <Pagination totalPages={totalPages} currentPage={safePage} />
+          </Suspense>
+        </>
       )}
     </div>
   );

@@ -5,7 +5,11 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
 import LikeButton from "@/components/LikeButton";
+import BookmarkButton from "@/components/BookmarkButton";
 import ShareButton from "@/components/ShareButton";
+import ViewCounter from "@/components/ViewCounter";
+import TableOfContents from "@/components/TableOfContents";
+import CopyCodeBlocks from "@/components/CopyCodeBlocks";
 import PostCard from "@/components/PostCard";
 import { readingTime } from "@/lib/readingTime";
 import { headers } from "next/headers";
@@ -25,11 +29,11 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
   const time = readingTime(post.content);
 
   // Related posts: same tags, exclude current post, limit 3
-  let relatedPosts: { id: string; title: string; tags: string; content: string; updatedAt: Date; authorName: string | null; authorId: string | null; likes: number }[] = [];
+  let relatedPosts: { id: string; title: string; tags: string; content: string; updatedAt: Date; authorName: string | null; authorId: string | null; likes: number; views: number }[] = [];
   if (tagList.length > 0) {
     const all = await prisma.post.findMany({
       where: { id: { not: id } },
-      select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true, likes: true },
+      select: { id: true, title: true, tags: true, content: true, updatedAt: true, authorName: true, authorId: true, likes: true, views: true },
       orderBy: { updatedAt: "desc" },
     });
     relatedPosts = all
@@ -63,6 +67,7 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
                 <Clock size={12} />
                 {time}
               </span>
+              <ViewCounter postId={post.id} initialViews={post.views} />
               <span className="flex items-center gap-1.5 text-xs text-stone-400">
                 <Calendar size={12} />
                 {new Date(post.updatedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
@@ -96,16 +101,23 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
         </div>
       </div>
 
+      <TableOfContents content={post.content} />
+
       <div className="rounded-2xl border border-stone-200 bg-white px-8 py-7 shadow-sm dark:border-stone-700 dark:bg-stone-900">
         <div
+          data-post-content
           className="prose prose-stone max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-a:text-violet-600 prose-code:rounded prose-code:bg-stone-100 prose-code:text-violet-700 prose-blockquote:border-violet-300 dark:prose-code:bg-stone-800 dark:prose-code:text-violet-400"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+        <CopyCodeBlocks />
       </div>
 
-      {/* Like + Share */}
+      {/* Like + Bookmark + Share */}
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-        <LikeButton postId={post.id} initialLikes={post.likes} />
+        <div className="flex items-center gap-2">
+          <LikeButton postId={post.id} initialLikes={post.likes} />
+          <BookmarkButton postId={post.id} />
+        </div>
         <ShareButton title={post.title} url={postUrl} />
       </div>
 
@@ -126,6 +138,7 @@ export default async function ViewPostPage({ params }: { params: Promise<{ id: s
                 updatedAt={p.updatedAt.toISOString()}
                 authorName={p.authorName}
                 likes={p.likes}
+                views={p.views}
                 isOwner={isAdmin || p.authorId === session?.user?.id}
               />
             ))}

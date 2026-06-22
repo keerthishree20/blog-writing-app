@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, BookOpen, PenLine, Feather, LogIn } from "lucide-react";
+import { Menu, X, BookOpen, PenLine, Feather, LogIn, Bookmark, UserCircle } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import UserMenu from "./UserMenu";
 
@@ -77,6 +77,13 @@ export default function MobileNav({ user }: Props) {
             <BookOpen size={15} />
             All Posts
           </Link>
+          <Link
+            href="/bookmarks"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-stone-600 transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-stone-400 dark:hover:bg-violet-950 dark:hover:text-violet-300"
+          >
+            <Bookmark size={15} />
+            Bookmarks
+          </Link>
           {user && (
             <>
               <p className="mb-1 mt-3 px-3 text-[10px] font-semibold uppercase tracking-widest text-stone-400">
@@ -88,6 +95,13 @@ export default function MobileNav({ user }: Props) {
               >
                 <PenLine size={15} />
                 New Post
+              </Link>
+              <Link
+                href="/profile"
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-stone-600 transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-stone-400 dark:hover:bg-violet-950 dark:hover:text-violet-300"
+              >
+                <UserCircle size={15} />
+                Profile
               </Link>
             </>
           )}

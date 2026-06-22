@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Pencil, Trash2, Clock, User, Heart } from "lucide-react";
+import { Pencil, Trash2, Clock, User, Heart, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { readingTime } from "@/lib/readingTime";
 
@@ -13,6 +13,8 @@ interface PostCardProps {
   updatedAt: string;
   authorName?: string | null;
   likes?: number;
+  views?: number;
+  searchQuery?: string;
   isOwner?: boolean;
 }
 
@@ -20,7 +22,23 @@ function stripHtml(html: string) {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-export default function PostCard({ id, title, tags, content, updatedAt, authorName, likes = 0, isOwner }: PostCardProps) {
+function highlightText(text: string, query: string) {
+  if (!query) return text;
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const parts = text.split(new RegExp(`(${escaped})`, "gi"));
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    part.toLowerCase() === query.toLowerCase() ? (
+      <mark key={i} className="rounded bg-yellow-200 px-0.5 text-yellow-900 dark:bg-yellow-800 dark:text-yellow-100">
+        {part}
+      </mark>
+    ) : (
+      part
+    )
+  );
+}
+
+export default function PostCard({ id, title, tags, content, updatedAt, authorName, likes = 0, views = 0, searchQuery = "", isOwner }: PostCardProps) {
   const router = useRouter();
   const tagList = tags ? tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
   const excerpt = stripHtml(content).slice(0, 120);
@@ -38,9 +56,15 @@ export default function PostCard({ id, title, tags, content, updatedAt, authorNa
       <Link href={`/posts/${id}`} className="block">
         <div className="flex items-start justify-between gap-4">
           <h2 className="text-base font-semibold text-stone-900 transition-colors group-hover:text-violet-700 dark:text-stone-100 dark:group-hover:text-violet-400">
-            {title}
+            {highlightText(title, searchQuery)}
           </h2>
           <div className="flex shrink-0 items-center gap-2">
+            {views > 0 && (
+              <span className="flex items-center gap-1 text-xs text-stone-400">
+                <Eye size={11} />
+                {views}
+              </span>
+            )}
             {likes > 0 && (
               <span className="flex items-center gap-1 text-xs text-red-400">
                 <Heart size={11} fill="currentColor" />
