@@ -64,6 +64,23 @@ Blog Writer is a production-deployed, full-stack blog writing application. Users
 
 ## 3. Project Setup from Scratch
 
+### Running this repository
+To run the existing project rather than rebuild it:
+
+```bash
+git clone https://github.com/keerthishree20/blog-writing-app.git
+cd blog-writing-app
+npm install                     # postinstall runs prisma generate
+# create .env with the variables in Step 4
+npx prisma migrate deploy       # apply the three committed migrations
+npm run dev                     # http://localhost:3000
+```
+
+`DATABASE_URL` must point at a PostgreSQL database. A free Neon database works. GitHub login appears
+only when `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` are also set.
+
+The steps below record how the project was originally built.
+
 ### Step 1: Create Next.js app
 ```bash
 npx create-next-app@latest Blog_Writing --typescript --tailwind --app --turbopack
@@ -218,11 +235,19 @@ We use Auth.js v5 with two configuration files:
 
 ### Route Protection
 
-`proxy.ts` protects:
-- `/posts/new` — must be logged in to create posts
-- `/posts/*/edit` — must be logged in to edit posts
+`proxy.ts` runs on every page except `/api`, static files and the favicon. Its `isWriteRoute()`
+check sends a logged-out visitor to `/login?callbackUrl=...` on exactly two kinds of page:
+- `/posts/new`, creating a post,
+- `/posts/[id]/edit`, editing a post.
 
-Unauthenticated users are redirected to `/login`.
+Everything else, including reading a single post at `/posts/[id]`, is public. Until 2026-09-18 the
+check matched every path starting with `/posts/`, so a logged-out reader opening a shared post link
+was sent to the login page first.
+
+The page gate is not the only guard. Every mutating API route checks `auth()` itself, as described
+below.
+
+`/profile` is protected separately: the page itself calls `auth()` and redirects to `/login`.
 
 ### Authorization Pattern
 
