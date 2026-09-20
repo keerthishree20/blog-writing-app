@@ -2,6 +2,9 @@
 
 A complete guide from zero to production for the Blog Writer application. Covers every feature, architecture decision, and implementation detail.
 
+**Repository:** https://github.com/keerthishree20/blog-writing-app
+**Live:** https://blog-writing-app-ashy.vercel.app
+
 ---
 
 ## Table of Contents
