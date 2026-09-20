@@ -1,5 +1,7 @@
 # Blog Writing App
 
+[![build](https://github.com/keerthishree20/blog-writing-app/actions/workflows/build.yml/badge.svg)](https://github.com/keerthishree20/blog-writing-app/actions/workflows/build.yml)
+
 Full-stack blogging platform with AI-assisted writing, rich text editing with auto-save, tag filtering, post likes, reading progress, Google OAuth and email/password auth, backed by Neon PostgreSQL.
 
 **Live Demo:** [https://blog-writing-app-ashy.vercel.app](https://blog-writing-app-ashy.vercel.app)
