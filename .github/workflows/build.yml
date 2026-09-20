@@ -9,8 +9,27 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    # `npm run build` is `prisma migrate deploy && next build`, so the build
+    # needs a real database. A throwaway Postgres also proves the migrations
+    # still apply to an empty database.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: blog
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     env:
-      DATABASE_URL: "postgresql://user:pass@localhost:5432/db"
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/blog"
       AUTH_SECRET: "ci-build-only-not-a-real-secret"
       NEXTAUTH_URL: "http://localhost:3000"
 
